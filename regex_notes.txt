@@ -1,0 +1,264 @@
+Hold onto your butts... 
+
+REGEX
+
+Regex, short for regular expression, is a sequence of 
+characters that define a search pattern. 
+
+It is a powerful tool used for matching and manipulating text in  
+variablearious programming languages and applications. 
+
+Regex allows you to specify a set of rules that 
+define what kind of text pattern you're looking for, such as specific 
+characters, words, or phrases, and how it should be matched within a 
+larger body of text. 
+
+It can be used for tasks such as searching, replacing, 
+and validating text data. 
+
+Regex is widely used in web development, 
+data processing, text editors, and many other applications where 
+text manipulation is required.
+
+
+---------------------------------------------------------------------------------------
+
+
+Use cases are:
+
+- Making sure phone numbers are entered in a valid format 
+- Searching through an email for spam keywords
+- Reformatting information such as credit card numbers 
+
+Regex expression are contained within forward slashes in the majority of
+programming languages 
+
+
+---------------------------------------------------------------------------------------
+
+
+
+https://regexr.com/
+
+sample text:
+The fat cat ran down the street.  
+It was searching for a mouse to eat. 
+
+
+
+flags:
+
+g - global (allows us to do multiple matches)
+i - case insensitive 
+m - multiline 
+
+patterns are usually written within forward and backward slashes
+
+
+
+literal characters: 
+
+/cat/
+/c|a|t/ without global this statement only matches the first instance of c a or t 
+/at/g
+/The/gi
+
+
+we'll talk about multiline in a little bit when we talk about anchor expression 
+
+
+Metacharacters:
+
+/ / are assumed below 
+
+e - matches only the character e 
+
+
+quantifiers: 
+
+e+ - matches a string of e's (one or more of the preceding token)
+ea? - matches all individual occurrences of e and optionally a (? means 0 or more of the preceding token)
+re* - match as many as possible in a row (0 or more)
+.at - match any character that comes before as well 
+.at. - match any character that comes after as well
+
+
+\.g - escape character
+\w - match any word characters
+\w* - makes it greedy 
+\W - match anything that's not a word
+\s - match any white space
+\S - match anything that's not white space
+\d - match any digit 
+\D - match any non-digit 
+
+more quantifiers: 
+
+\w{4} - match all words that are four characters -- this is a quantifier 
+\w{4,} - match four or more 
+\w{4,5} - between four and five 
+
+
+capture groups:
+
+(the) (fat) (cat) 
+These are useful for when we want to refer to a specific capture group in code, usually for pattern replacement
+
+In replacement the $ symbol plus the number of the capture group holds the value of that capture group
+
+As an example, $1 holds the value of the in the capture groups above, $2 holds the value of fat and so on 
+
+
+character sets:
+
+[fc]at - match f or c and then at 
+[^fc]at - match everything but f or c followed by at 
+
+ranges:
+[a-z]ing - match any character a-z followed by ing 
+
+make it greedy: 
+[a-z]*ing
+
+ranges can also be done with numbers  [1-9]
+
+character groups:
+(t|T)he - Match uppercase or lowercase t and then he 
+
+with ranges:
+(c|a|t|f){2,3}
+
+
+expression anchors: 
+
+carrot symbol:
+
+^Match the beginning of a line 
+^T - matches the first letter of the sentence 
+^[T|I]/gm
+^The - matches the first the 
+
+dollar symbol matches the end of the line:
+\.$
+
+Using the ^ and $ symbols in conjunction, as in the example below: 
+
+We use the ^ and $ anchor expressions when we want to match a string that starts and ends with the pattern on the same line 
+
+When an expression is between these expression anchors, if any additional text is present that 
+does not match the regex expression, there will be no match 
+
+123 asDasd
+123
+^\d{3}$
+
+^\d{3}-\d{3}-\d{4}$
+
+The regular expression anchors in the pattern variable in the example code are significant 
+because they ensure that the regular expression matches only 10-digit phone numbers that follow a specific format, and that there are no additional characters before or after the phone number.
+
+Specifically, the ^ anchor at the beginning of the pattern matches the beginning of the string, 
+ensuring that the phone number starts at the beginning of the string and that there are no additional characters before it. 
+
+The $ anchor at the end of the pattern matches the end of the string, ensuring that the phone number ends at the end of the string and that there are no additional characters after it.
+
+Without these anchors, the regular expression could potentially match phone numbers that are not 10 digits, or that have additional characters before or after the phone number, which could lead to incorrect results.
+
+For example, consider the following string: "My phone number is 1234567890, call me!" 
+
+If the regular expression in the example code did not include the anchors, it would 
+match the phone number "1234567890" as well as the additional text "call me!", which 
+is not part of the phone number.
+
+By including the anchors, the regular expression only matches the 10-digit phone number and 
+ignores any additional text before or after it, ensuring that the function returns the 
+correctly formatted phone number string.
+
+multiline is effective when we want to parse multiple lines of input to see if the pattern holds, for 
+example a list of telephone numbers using the regex expression ^\d{3}-\d{3}-\d{4}$:
+
+(555) 123-4567
+555-555-5555
+1-800-123-4567
+555.123.4567
+(123)555-4567
+123-456-7890
+
+This returns only the numbers 555-555-5555 and 123-456-7890
+
+
+(optional)
+
+Look ahead and look behind:
+
+look ahead:
+
+.(?=at) - give me everything that has at after it 
+.(?!at) - give me everything not followed by at 
+
+
+look behind:
+
+(?<=[tT]he). - give me everything that is preceded by The
+(?<![tH]he). - give me everything that is not preceded by The 
+
+
+
+Do you need to memorize all of this?
+
+NO! 
+
+https://openai.com/blog/chatgpt#OpenAI
+
+
+Practice:
+
+Let's reverse engineer this:
+
+(\d{3})[ -]?(\d{3})[ -]?(\d{4})
+
+pattern match phone numbers
+
+search for ten digits in a row 
+\d{10}
+1234567890
+
+Now, instead of just checking for ten characters in a row, we need to 
+check for groupings with optional dashes 
+
+\d{3}-?\d{3}-?\d{4}
+123-456-7890
+
+If we want to account for spaces
+\d{3}[ -]?\d{3}[ -]?\d{4}
+
+123 456 7890
+
+What if we want to reformat a phone number?  In order to do so
+we need to capture the digits as groups
+(\d{3})[ -]?(\d{3})[ -]?(\d{4})
+
+open up details on regexr to see the groupings 
+
+Use the replace tool to see how we can reformat these groups
+$1-$2-$3
+ 
+ In regular expressions (regex), the dollar sign ($) is used to refer  to capture groups in the replacement string of a regex replace operation.
+
+Capture groups are portions of the regular expression 
+pattern that are enclosed in parentheses. When a regular expression match is found, 
+the contents of each capture group are stored in memory, and can be referred 
+to using numbered back references. 
+
+The $1, $2, $3 in the example you provided refer to the contents of the first, second, and 
+third capture group, respectively.
+
+So in the example you provided, the regex replace operation would replace the 
+entire match with the contents of the first capture group, followed by a hyphen, 
+the contents of the second capture group, another hyphen, 
+and then the contents of the third capture group.
+
+For example, if the original string was "apple, banana, cherry" 
+and the regex pattern was "(\w+), (\w+), (\w+)", the match would 
+be "apple, banana, cherry", and the replacement string would be 
+"$1-$2-$3", resulting in the output "apple-banana-cherry".
