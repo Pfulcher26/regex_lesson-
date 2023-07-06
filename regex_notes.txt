@@ -6,7 +6,7 @@ Regex, short for regular expression, is a sequence of
 characters that define a search pattern. 
 
 It is a powerful tool used for matching and manipulating text in  
-variablearious programming languages and applications. 
+various programming languages and applications. 
 
 Regex allows you to specify a set of rules that 
 define what kind of text pattern you're looking for, such as specific 
